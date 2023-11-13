@@ -16,6 +16,8 @@ public class MeuBot : MonoBehaviour {
 
     float q = 0.0f;
 
+    bool coolDown = false;
+
 
     void Start() {
 
@@ -136,11 +138,26 @@ public class MeuBot : MonoBehaviour {
 
         RaycastHit raycastInfo;
         Vector3 rayToTarget = target.transform.position - transform.position;
-        if (Physics.Raycast(transform.position, rayToTarget, out raycastInfo)) {
+        float lookAngle = Vector3.Angle(transform.forward, rayToTarget);
+        if (lookAngle < 60.0f && Physics.Raycast(transform.position, rayToTarget, out raycastInfo)) {
 
             if (raycastInfo.transform.gameObject.tag == "cop") return true;
         }
         return false;
+    }
+
+    bool CanSeeMe() {
+
+        Vector3 rayToTarget = transform.position - target.transform.position;
+        float lookAngle = Vector3.Angle(target.transform.forward, rayToTarget);
+
+        if (lookAngle < 60.0f) return true;
+        return false;
+    }
+
+    void BehaviourCoolDown() {
+
+        coolDown = false;
     }
 
     void Update() {
@@ -151,6 +168,14 @@ public class MeuBot : MonoBehaviour {
         // Evade();
         // Wander();
         // Hide();
-        if (CanSeeTarget()) CleverHide();
+        if (!coolDown) {
+
+            if (CanSeeTarget() && CanSeeMe()) {
+
+                CleverHide();
+                coolDown = true;
+                Invoke("BehaviourCoolDown", 5.0f);
+            } else Pursue();
+        }
     }
 }

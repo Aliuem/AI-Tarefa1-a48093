@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public sealed class World
+namespace MyGame
 {
-    private static readonly World instance = new World();
-    private static GameObject[] hidingSpots;
+    using UnityEngine;
 
-    static World()
+    public sealed class World
     {
-        hidingSpots = GameObject.FindGameObjectsWithTag("hide");
-    }
+        private static readonly World instance = new World();
+        private static GameObject[] hidingSpots;
 
-    private World() { }
+        static World()
+        {
+            hidingSpots = GameObject.FindGameObjectsWithTag("hide");
+        }
 
-    public static World Instance
-    {
-        get { return instance; }
-    }
+        private World() { }
 
-    public GameObject[] GetHidingSpots()
-    {
-        return hidingSpots;
+        public static World Instance
+        {
+            get { return instance; }
+        }
+
+        public GameObject[] GetHidingSpots()
+        {
+            return hidingSpots;
+        }
     }
 }
