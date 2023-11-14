@@ -7,18 +7,34 @@ public class AIControl : MonoBehaviour {
 
     public GameObject goal;
     NavMeshAgent agent;
+    Animator anim;
+    GameObject[] goallocations; // Mova a declaração para o nível da classe
 
-    void Start() {
-        agent = GetComponent<NavMeshAgent>();
+    void Start()
+    {
+        agent = this.GetComponent<NavMeshAgent>();
+        goallocations = GameObject.FindGameObjectsWithTag("goal"); // Agora goallocations é acessível em toda a classe
 
-        if (goal != null) {
-            agent.SetDestination(goal.transform.position);
-        } else {
-            Debug.LogError("O campo 'goal' não foi atribuído no Inspector para o objeto " + gameObject.name);
+        if (goallocations.Length > 0)
+        {
+            int i = Random.Range(0, goallocations.Length);
+            agent.SetDestination(goallocations[i].transform.position);
+            anim = this.GetComponent<Animator>();
+            anim.SetTrigger("isWalking"); 
+            anim.SetFloat("woffset", Random.Range(0, 1.0f));
+        }
+        else
+        {
+            
         }
     }
 
-    void Update() {
-        // Lógica de atualização aqui
+    void Update()
+    {
+        if (agent.remainingDistance < 1)
+        {
+            int i = Random.Range(0, goallocations.Length);
+            agent.SetDestination(goallocations[i].transform.position);
+        }
     }
 }
