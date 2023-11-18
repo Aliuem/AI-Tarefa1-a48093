@@ -22,13 +22,13 @@ namespace UnityStandardAssets.Utility
         }
 
         [SerializeField]
-        private BuildTargetGroup m_BuildTargetGroup = BuildTargetGroup.Standalone;
+        private BuildTargetGroup m_BuildTargetGroup;
         [SerializeField]
         private GameObject[] m_Content = new GameObject[0];
         [SerializeField]
         private MonoBehaviour[] m_MonoBehaviours = new MonoBehaviour[0];
         [SerializeField]
-        private bool m_ChildrenOfThisObject = true;
+        private bool m_ChildrenOfThisObject;
 
 #if !UNITY_EDITOR
 	void OnEnable()
