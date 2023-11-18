@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class BehaviourTree : Node
 {
-    public string name;
+    public string Name;
 
     // Default constructor
     public BehaviourTree()
     {
         name = "Tree";
     }
+
+    public override Status Process()
+    {
+        return children[currentChild] . Process();
+    }
+
 
     // Constructor with a parameter
     public BehaviourTree(string n)
