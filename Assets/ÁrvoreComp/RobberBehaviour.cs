@@ -10,6 +10,10 @@ public class RobberBehaviour : MonoBehaviour
     public GameObject van;
     NavMeshAgent agent;
 
+    public enum ActionState{ IDLE,WORKING };
+    ActionState state = ActionState.IDLE;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,14 +36,35 @@ public class RobberBehaviour : MonoBehaviour
 
     public Node.Status GoToDiamond()
     {
-        agent.SetDestination(diamond.transform.position);
-        return Node.Status.SUCCESS;
+        return GoToLocation(diamond.transform.position);
     }
 
     public Node.Status GoToVan()
     {
-        agent.SetDestination(van.transform.position);
-        return Node.Status.SUCCESS;
+      return GoToLocation(Van.transform.position);
+    }
+
+    Node. status GoToLocation(vector3 destination)
+    {
+        Float distanceToTarger = vector3 Destance(destination, this.transform.position);
+        if(state == ActionState.IDLE)
+        {
+            agent.SetDestination(destination);
+            state = ActionState. WORKING;
+        }
+        else if (vector3.Distance(agent.pathEndpositons, destination) >= 2 )
+        {
+            state = ActionState.IDLE;
+            return Node.StateFAILURE;
+
+        }
+        else if (disntaceToTarger< 2 )
+        {
+            state = ActionState.IDLE; 
+            return Node.Status.SUCCESS; 
+        
+        }
+        return Node.Status. RUNNING; 
     }
 
     // Update is called once per frame
