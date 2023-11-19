@@ -10,8 +10,9 @@ public class RobberBehaviour : MonoBehaviour
     public GameObject van;
     NavMeshAgent agent;
 
-    public enum ActionState{ IDLE,WORKING };
+    public enum ActionState { IDLE, WORKING };
     ActionState state = ActionState.IDLE;
+    Node.Status treeStatus = Node.Status.RUNNING;
 
 
     // Start is called before the first frame update
@@ -19,19 +20,19 @@ public class RobberBehaviour : MonoBehaviour
     {
         agent = this.GetComponent<NavMeshAgent>();
         tree = new BehaviourTree();
-        
-        Node steal = new Node("Steal Something");
+
+        Sequence steal = new Sequence("Steal Something");
         LeafNode goToDiamond = new LeafNode("Go To Diamond", GoToDiamond);
         LeafNode goToVan = new LeafNode("Go To Van", GoToVan);
-        
+
         steal.AddChild(goToDiamond);
         steal.AddChild(goToVan);
-        
+
         tree.AddChild(steal);
         tree.PrintTree();
-        
+
         tree.Process();
-    
+
     }
 
     public Node.Status GoToDiamond()
@@ -41,35 +42,35 @@ public class RobberBehaviour : MonoBehaviour
 
     public Node.Status GoToVan()
     {
-      return GoToLocation(Van.transform.position);
+        return GoToLocation(van.transform.position);
     }
 
-    Node. status GoToLocation(vector3 destination)
+    Node.Status GoToLocation(Vector3 destination)
     {
-        Float distanceToTarger = vector3 Destance(destination, this.transform.position);
-        if(state == ActionState.IDLE)
+        float distanceToTarget = Vector3.Distance(destination, this.transform.position);
+        if (state == ActionState.IDLE)
         {
             agent.SetDestination(destination);
-            state = ActionState. WORKING;
+            state = ActionState.WORKING;
         }
-        else if (vector3.Distance(agent.pathEndpositons, destination) >= 2 )
+        else if (Vector3.Distance(agent.pathEndPosition, destination) >= 2)
         {
             state = ActionState.IDLE;
-            return Node.StateFAILURE;
-
+            return Node.Status.FAILURE;
         }
-        else if (disntaceToTarger< 2 )
+        else if (distanceToTarget < 2)
         {
-            state = ActionState.IDLE; 
-            return Node.Status.SUCCESS; 
-        
+            state = ActionState.IDLE;
+            return Node.Status.SUCCESS;
         }
-        return Node.Status. RUNNING; 
+        return Node.Status.RUNNING;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Add your behavior tree execution logic here
+        if (treeStatus == Node.Status.RUNNING)
+         treeStatus = tree.Process();
+        
     }
 }
